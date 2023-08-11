@@ -219,7 +219,7 @@ class PhoneCollection:
             self.data.groupby(
                 [c for c in self.columns if c != self.source.allophone_column]
             )
-            .mean()
+            .mean(numeric_only=True)
             .reset_index()
         )
         return [self._row_to_phone(row) for _, row in phone_df.iterrows()]
@@ -251,7 +251,7 @@ class PhoneCollection:
         """
         phone_df = self.data.groupby(self.columns).mean().reset_index()
         if len(phone_df) > 1:
-            phone_df = self.data.groupby(self.source.index_column).mean().reset_index()
+            phone_df = self.data.groupby(self.source.index_column).mean(numeric_only=True).reset_index()
         results = [self._row_to_phone(row) for _, row in phone_df.iterrows()]
         assert len(results) == 1
         return results[0]
@@ -326,7 +326,7 @@ class PhoneCollection:
         Return:
             The mean distance between the two phones.
         """
-        phones_df = self.data.groupby(self.source.index_column).mean().reset_index()
+        phones_df = self.data.groupby(self.source.index_column).mean(numeric_only=True).reset_index()
         phone1_df = phones_df[phones_df[self.source.index_column] == phone][
             self.source.feature_columns
         ].values.flatten()
@@ -364,7 +364,7 @@ class PhoneCollection:
             self.data.groupby(
                 [c for c in self.columns if c != self.source.allophone_column]
             )
-            .mean()
+            .mean(numeric_only=True)
             .reset_index()
         )
         phones_df.drop_duplicates(inplace=True)
